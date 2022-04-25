@@ -1,0 +1,27 @@
+@Override
+    public boolean onTouchEvent(MotionEvent event) {
+       boolean result = detector.onTouchEvent(event);
+       if (!result) {
+           if (event.getAction() == MotionEvent.ACTION_UP) {
+               stopScrolling();
+               result = true;
+           }
+       }
+       return result;
+    }
+
+
+scroller = new Scroller(getContext(), null, true);
+    scrollAnimator = ValueAnimator.ofFloat(0,1);
+    scrollAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+            if (!scroller.isFinished()) {
+                scroller.computeScrollOffset();
+                setPieRotation(scroller.getCurrY());
+            } else {
+                scrollAnimator.cancel();
+                onScrollFinished();
+            }
+        }
+    });
